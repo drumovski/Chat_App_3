@@ -11,25 +11,18 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
   console.log('a user connected');
+  socket.broadcast.emit('new connection', 'Someone connected');
     //add socket.on functions here:
   socket.on('disconnect', () => {
     console.log('user disconnected');
+    io.emit('disconnected', 'Someone disconnected');
   });
 
   socket.on('chat message', (msg) => {
     console.log('message: ' + msg);
-  });
-
-});
-
-/* moved this duplicate function and added it to the io.on function
-io.on('connection', (socket) => {
-  socket.on('chat message', (msg) => {
-    console.log('message: ' + msg);
+    io.emit('chat message', msg);
   });
 });
-*/
-
 
 server.listen(3000, () => {
   console.log('listening on *:3000');
